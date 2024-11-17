@@ -1,37 +1,40 @@
-import React, { useContext, useState, useEffect } from 'react'; // Added useEffect
+import React, { useContext, useState, useEffect } from 'react';
 import { ShopContext } from '../context/ShopContext';
+import Title from './Title'; // Ensure the correct import path
+import ProductItem from './ProductItem'; // Ensure the correct import path
 
 const RelatedProducts = ({ category, subCategory }) => {
-  const { products } = useContext(ShopContext); // Access products from context
-  const [related, setRelated] = useState([]); // State to store related products
+  const { products } = useContext(ShopContext); // Access the products from context
+  const [related, setRelated] = useState([]);
 
   useEffect(() => {
-    // Check if products array has data
-    if (products.length > 0) {
-      // Filter products based on category and subCategory
-      let relatedProducts = products
+    if (products.length > 0 && category && subCategory) {
+      const relatedProducts = products
         .filter((item) => item.category === category) // Match category
         .filter((item) => item.subCategory === subCategory) // Match subCategory
         .slice(0, 5); // Limit to 5 related products
-
-      setRelated(relatedProducts); // Update related state
-      console.log(relatedProducts); // Log the related products for debugging
+      setRelated(relatedProducts);
     }
-  }, [products, category, subCategory]); // Dependencies include category and subCategory
+  }, [products, category, subCategory]);
 
   return (
-    <div>
-      {/* Render the related products */}
-      <h3>Related Products</h3>
-      {related.length > 0 ? (
-        <ul>
-          {related.map((product, index) => (
-            <li key={index}>{product.name}</li> // Render product names or other details
-          ))}
-        </ul>
-      ) : (
-        <p>No related products found.</p>
-      )}
+    <div className="my-24">
+      {/* Title Section */}
+      <div className="text-center text-3xl py-2">
+        <Title text="RELATED" text2="PRODUCTS" />
+      </div>
+      {/* Products Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 gap-y-6">
+        {related.map((item) => (
+          <ProductItem
+            key={item._id || item.id} // Ensure a unique key exists
+            id={item._id || item.id}
+            name={item.name}
+            price={item.price}
+            image={item.image}
+          />
+        ))}
+      </div>
     </div>
   );
 };
