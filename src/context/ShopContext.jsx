@@ -37,20 +37,30 @@ import { toast } from "react-toastify";
 
       }
 
-    const getCartCount = () =>{
+      const getCartCount = () => {
         let totalCount = 0;
-        for(const items in cartItems){
-            for(const item in cartItems[items]){
+        for (const items in cartItems) {
+            for (const size in cartItems[items]) {
                 try {
-                    if (cartItems[items][item] > 0) {
-                        totalCount += cartItems[items][item];
+                    if (cartItems[items][size] > 0) {
+                        totalCount += cartItems[items][size];
                     }
                 } catch (error) {
-
+                    console.error(error);
                 }
             }
-            return totalCount;
         }
+        return totalCount; // Return totalCount after iterating through all items
+    };
+     
+    {/*Update quantity function using which we can update the cart item */}
+    const updateQuantity = async (itemId,size,quantity) => {
+
+        let cartData = structuredClone(cartItems);
+
+        cartData[itemId][size] = quantity;
+
+        setCartItems(cartData);
     }
       
 
@@ -58,7 +68,7 @@ import { toast } from "react-toastify";
         products, currency, delivery_fee,
         search, setSearch,showSearch,setShowSearch,
         cartItems, addToCart,
-        getCartCount
+        getCartCount,updateQuantity
     }
 
     return (
